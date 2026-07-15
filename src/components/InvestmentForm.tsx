@@ -1,4 +1,5 @@
 import type { InvestmentFieldErrors } from '../types'
+import './InvestmentForm.css'
 
 interface InvestmentFormProps {
   initialInvestment: string

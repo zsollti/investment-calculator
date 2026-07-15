@@ -1,0 +1,25 @@
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--accent-bg);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.summary-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-h);
+}

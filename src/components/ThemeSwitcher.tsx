@@ -1,4 +1,5 @@
 import type { Theme } from '../themes'
+import './ThemeSwitcher.css'
 
 interface ThemeSwitcherProps {
   themes: Theme[]

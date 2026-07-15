@@ -1,6 +1,7 @@
 import type { InvestmentResult } from '../types'
 import { INVESTMENT_HORIZON_YEARS } from '../calculations'
 import { formatCurrency } from '../format'
+import './SummaryStats.css'
 
 interface SummaryStatsProps {
   result: InvestmentResult

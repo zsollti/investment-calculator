@@ -1,0 +1,50 @@
+.page-midnight {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 96px;
+  align-items: start;
+}
+
+.midnight-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 32px;
+}
+
+.midnight-sidebar h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.midnight-subtitle {
+  color: var(--text);
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+
+.midnight-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.midnight-placeholder {
+  color: var(--text);
+  padding: 24px;
+}
+
+@media (max-width: 720px) {
+  .page-midnight {
+    grid-template-columns: 1fr;
+  }
+
+  .midnight-sidebar {
+    position: static;
+  }
+}

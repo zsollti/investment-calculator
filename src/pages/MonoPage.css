@@ -1,0 +1,70 @@
+.page-mono {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mono-header h1 {
+  font-size: 26px;
+  margin: 0 0 4px;
+}
+
+.mono-header p {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.mono-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+}
+
+.mono-table th,
+.mono-table td {
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.mono-table th {
+  width: 45%;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.mono-table input {
+  font: inherit;
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text-h);
+  padding: 0;
+}
+
+.mono-table input:focus-visible {
+  outline: 1px solid var(--accent);
+}
+
+.mono-table input[aria-invalid='true'] {
+  color: var(--error);
+}
+
+.mono-error {
+  display: block;
+  font-size: 12px;
+  color: var(--error);
+  margin-top: 4px;
+}
+
+.mono-results td {
+  font-weight: 600;
+  text-align: right;
+}
+
+.mono-placeholder {
+  color: var(--text);
+}

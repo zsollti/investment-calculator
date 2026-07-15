@@ -10,6 +10,7 @@ import {
 } from 'recharts'
 import type { YearlyDataPoint } from '../types'
 import { formatCurrency } from '../format'
+import './GrowthChart.css'
 
 interface GrowthChartProps {
   data: YearlyDataPoint[]

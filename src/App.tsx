@@ -1,78 +1,41 @@
-import { useEffect, useMemo, useState } from 'react'
-import InvestmentForm from './components/InvestmentForm'
-import GrowthChart from './components/GrowthChart'
-import SummaryStats from './components/SummaryStats'
+import { useEffect, useState } from 'react'
+import type { ComponentType } from 'react'
 import ThemeSwitcher from './components/ThemeSwitcher'
-import { calculateInvestmentGrowth, INVESTMENT_HORIZON_YEARS } from './calculations'
-import { validateInvestmentInputs } from './validation'
+import ClassicPage from './pages/ClassicPage'
+import MidnightPage from './pages/MidnightPage'
+import SunsetPage from './pages/SunsetPage'
+import OceanPage from './pages/OceanPage'
+import MonoPage from './pages/MonoPage'
+import TerminalPage from './pages/TerminalPage'
+import { useInvestmentCalculator } from './hooks/useInvestmentCalculator'
 import { DEFAULT_THEME, THEME_STORAGE_KEY, THEMES } from './themes'
-import type { ParsedInvestmentInputs } from './types'
-import './App.css'
+import type { InvestmentCalculator } from './hooks/useInvestmentCalculator'
 
-function parseField(value: string): number | null {
-  return value.trim() === '' ? null : Number(value)
+const PAGES: Record<string, ComponentType<{ calc: InvestmentCalculator }>> = {
+  classic: ClassicPage,
+  midnight: MidnightPage,
+  sunset: SunsetPage,
+  ocean: OceanPage,
+  mono: MonoPage,
+  terminal: TerminalPage,
 }
 
 function App() {
-  const [initialInvestment, setInitialInvestment] = useState('10000')
-  const [monthlyInvestment, setMonthlyInvestment] = useState('200')
-  const [annualRatePercent, setAnnualRatePercent] = useState('7')
   const [theme, setTheme] = useState(() => localStorage.getItem(THEME_STORAGE_KEY) ?? DEFAULT_THEME)
+  const calc = useInvestmentCalculator()
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem(THEME_STORAGE_KEY, theme)
   }, [theme])
 
-  const parsedInputs: ParsedInvestmentInputs = {
-    initialInvestment: parseField(initialInvestment),
-    monthlyInvestment: parseField(monthlyInvestment),
-    annualRatePercent: parseField(annualRatePercent),
-  }
-
-  const errors = validateInvestmentInputs(parsedInputs)
-  const isValid = Object.keys(errors).length === 0
-
-  const result = useMemo(() => {
-    if (!isValid) return null
-    return calculateInvestmentGrowth({
-      initialInvestment: parsedInputs.initialInvestment as number,
-      monthlyInvestment: parsedInputs.monthlyInvestment as number,
-      annualRatePercent: parsedInputs.annualRatePercent as number,
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isValid, parsedInputs.initialInvestment, parsedInputs.monthlyInvestment, parsedInputs.annualRatePercent])
+  const Page = PAGES[theme] ?? ClassicPage
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Investment Growth Calculator</h1>
-        <p>See how your initial and monthly investments could grow over {INVESTMENT_HORIZON_YEARS} years.</p>
-      </header>
-
-      <main className="app-main">
-        <InvestmentForm
-          initialInvestment={initialInvestment}
-          monthlyInvestment={monthlyInvestment}
-          annualRatePercent={annualRatePercent}
-          errors={errors}
-          onInitialInvestmentChange={setInitialInvestment}
-          onMonthlyInvestmentChange={setMonthlyInvestment}
-          onAnnualRateChange={setAnnualRatePercent}
-        />
-
-        {result ? (
-          <div className="results">
-            <SummaryStats result={result} />
-            <GrowthChart data={result.yearlyData} />
-          </div>
-        ) : (
-          <p className="results-placeholder">Fix the highlighted fields to see your projection.</p>
-        )}
-      </main>
-
+    <>
+      <Page calc={calc} />
       <ThemeSwitcher themes={THEMES} activeTheme={theme} onSelect={setTheme} />
-    </div>
+    </>
   )
 }
 
