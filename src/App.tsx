@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import InvestmentForm from './components/InvestmentForm'
 import GrowthChart from './components/GrowthChart'
 import SummaryStats from './components/SummaryStats'
+import ThemeSwitcher from './components/ThemeSwitcher'
 import { calculateInvestmentGrowth, INVESTMENT_HORIZON_YEARS } from './calculations'
 import { validateInvestmentInputs } from './validation'
+import { DEFAULT_THEME, THEME_STORAGE_KEY, THEMES } from './themes'
 import type { ParsedInvestmentInputs } from './types'
 import './App.css'
 
@@ -15,6 +17,12 @@ function App() {
   const [initialInvestment, setInitialInvestment] = useState('10000')
   const [monthlyInvestment, setMonthlyInvestment] = useState('200')
   const [annualRatePercent, setAnnualRatePercent] = useState('7')
+  const [theme, setTheme] = useState(() => localStorage.getItem(THEME_STORAGE_KEY) ?? DEFAULT_THEME)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem(THEME_STORAGE_KEY, theme)
+  }, [theme])
 
   const parsedInputs: ParsedInvestmentInputs = {
     initialInvestment: parseField(initialInvestment),
@@ -62,6 +70,8 @@ function App() {
           <p className="results-placeholder">Fix the highlighted fields to see your projection.</p>
         )}
       </main>
+
+      <ThemeSwitcher themes={THEMES} activeTheme={theme} onSelect={setTheme} />
     </div>
   )
 }

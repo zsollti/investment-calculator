@@ -1,0 +1,111 @@
+:root {
+  --radius-lg: 12px;
+  --radius-sm: 8px;
+  --font-body: var(--sans);
+
+  --text: #3f3d45;
+  --text-h: #08060d;
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: #e2e1e6;
+  --accent: #2f6f4f;
+  --accent-bg: rgba(47, 111, 79, 0.08);
+  --error: #c0392b;
+  --shadow: rgba(0, 0, 0, 0.06) 0 1px 3px, rgba(0, 0, 0, 0.04) 0 1px 2px;
+}
+
+:root[data-theme='classic'] {
+  --radius-lg: 12px;
+  --radius-sm: 8px;
+  --font-body: var(--sans);
+
+  --text: #3f3d45;
+  --text-h: #08060d;
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: #e2e1e6;
+  --accent: #2f6f4f;
+  --accent-bg: rgba(47, 111, 79, 0.08);
+  --error: #c0392b;
+  --shadow: rgba(0, 0, 0, 0.06) 0 1px 3px, rgba(0, 0, 0, 0.04) 0 1px 2px;
+}
+
+:root[data-theme='midnight'] {
+  --radius-lg: 14px;
+  --radius-sm: 9px;
+  --font-body: var(--sans);
+
+  --text: #b6b9c9;
+  --text-h: #f4f5fb;
+  --bg: #0b0e14;
+  --surface: #141824;
+  --border: #262c3d;
+  --accent: #8b7cf6;
+  --accent-bg: rgba(139, 124, 246, 0.16);
+  --error: #ff6b81;
+  --shadow: rgba(139, 124, 246, 0.25) 0 4px 20px, rgba(0, 0, 0, 0.4) 0 2px 6px;
+}
+
+:root[data-theme='sunset'] {
+  --radius-lg: 22px;
+  --radius-sm: 14px;
+  --font-body: var(--sans);
+
+  --text: #6b4636;
+  --text-h: #3d1f14;
+  --bg: #fff3e9;
+  --surface: #ffffff;
+  --border: #ffd9bd;
+  --accent: #ff6b4a;
+  --accent-bg: rgba(255, 107, 74, 0.12);
+  --error: #d1495b;
+  --shadow: rgba(255, 107, 74, 0.18) 0 6px 18px;
+}
+
+:root[data-theme='ocean'] {
+  --radius-lg: 10px;
+  --radius-sm: 6px;
+  --font-body: var(--sans);
+
+  --text: #395a63;
+  --text-h: #103038;
+  --bg: #eef8f9;
+  --surface: #ffffff;
+  --border: #cdeaec;
+  --accent: #0ea5a6;
+  --accent-bg: rgba(14, 165, 166, 0.1);
+  --error: #d1495b;
+  --shadow: rgba(14, 165, 166, 0.15) 0 3px 12px;
+}
+
+:root[data-theme='mono'] {
+  --radius-lg: 4px;
+  --radius-sm: 2px;
+  --font-body: var(--sans);
+
+  --text: #444444;
+  --text-h: #000000;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --border: #000000;
+  --accent: #000000;
+  --accent-bg: #f0f0f0;
+  --error: #000000;
+  --shadow: none;
+}
+
+:root[data-theme='terminal'] {
+  --radius-lg: 0px;
+  --radius-sm: 0px;
+  --font-body: var(--mono);
+
+  --text: #33ff66;
+  --text-h: #7dffab;
+  --bg: #0a0f0a;
+  --surface: #05100a;
+  --border: #1f6b3a;
+  --accent: #33ff66;
+  --accent-bg: rgba(51, 255, 102, 0.12);
+  --error: #ff5555;
+  --shadow: none;
+}
