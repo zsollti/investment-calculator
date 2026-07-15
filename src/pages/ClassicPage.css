@@ -18,6 +18,30 @@
   color: var(--text);
 }
 
+.classic-currency-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.classic-currency-pill {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.classic-currency-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--surface);
+}
+
 .classic-main {
   display: flex;
   flex-direction: column;

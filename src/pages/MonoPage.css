@@ -53,6 +53,27 @@
   color: var(--error);
 }
 
+.mono-currency-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.mono-currency-button {
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.mono-currency-button.active {
+  background: var(--text-h);
+  border-color: var(--text-h);
+  color: var(--bg);
+}
+
 .mono-error {
   display: block;
   font-size: 12px;

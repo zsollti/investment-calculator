@@ -28,6 +28,40 @@
   margin: 0 0 8px;
 }
 
+.midnight-currency-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+
+.midnight-currency-title {
+  font-size: 12px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.midnight-currency-option {
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.midnight-currency-option.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--text-h);
+}
+
 .midnight-main {
   display: flex;
   flex-direction: column;

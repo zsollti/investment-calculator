@@ -1,12 +1,9 @@
 import GrowthChart from '../components/GrowthChart'
 import { INVESTMENT_HORIZON_YEARS } from '../calculations'
+import { CURRENCIES } from '../currency'
 import { formatCurrency } from '../format'
-import type { InvestmentCalculator } from '../hooks/useInvestmentCalculator'
+import type { PageProps } from './pageProps'
 import './SunsetPage.css'
-
-interface PageProps {
-  calc: InvestmentCalculator
-}
 
 interface SliderRowProps {
   label: string
@@ -45,7 +42,7 @@ function SliderRow({ label, value, min, max, step, displayValue, onChange }: Sli
   )
 }
 
-function SunsetPage({ calc }: PageProps) {
+function SunsetPage({ calc, currency, onCurrencyChange }: PageProps) {
   const { initialInvestment, monthlyInvestment, annualRatePercent, result, setInitialInvestment, setMonthlyInvestment, setAnnualRatePercent } = calc
 
   return (
@@ -53,6 +50,20 @@ function SunsetPage({ calc }: PageProps) {
       <header className="sunset-header">
         <h1>Grow your money</h1>
         <p>Drag the sliders and watch your {INVESTMENT_HORIZON_YEARS}-year projection change.</p>
+
+        <div className="sunset-currency-toggle">
+          {CURRENCIES.map((option) => (
+            <button
+              key={option.code}
+              type="button"
+              className={`sunset-currency-pill${option.code === currency ? ' active' : ''}`}
+              aria-pressed={option.code === currency}
+              onClick={() => onCurrencyChange(option.code)}
+            >
+              {option.symbol}
+            </button>
+          ))}
+        </div>
       </header>
 
       <div className="sunset-sliders">
@@ -62,7 +73,7 @@ function SunsetPage({ calc }: PageProps) {
           min={0}
           max={200000}
           step={500}
-          displayValue={formatCurrency(safeNumber(initialInvestment))}
+          displayValue={formatCurrency(safeNumber(initialInvestment), currency)}
           onChange={setInitialInvestment}
         />
         <SliderRow
@@ -71,7 +82,7 @@ function SunsetPage({ calc }: PageProps) {
           min={0}
           max={5000}
           step={25}
-          displayValue={formatCurrency(safeNumber(monthlyInvestment))}
+          displayValue={formatCurrency(safeNumber(monthlyInvestment), currency)}
           onChange={setMonthlyInvestment}
         />
         <SliderRow
@@ -88,13 +99,18 @@ function SunsetPage({ calc }: PageProps) {
       {result ? (
         <>
           <div className="sunset-hero">
-            <span className="sunset-hero-label">In {INVESTMENT_HORIZON_YEARS} years, you could have</span>
-            <span className="sunset-hero-value">{formatCurrency(result.finalBalance)}</span>
+            <span className="sunset-hero-label">In {calc.visibleYears} years, you could have</span>
+            <span className="sunset-hero-value">{formatCurrency(result.finalBalance, currency)}</span>
             <span className="sunset-hero-sub">
-              {formatCurrency(result.totalContributed)} contributed &middot; {formatCurrency(result.totalInterest)} in growth
+              {formatCurrency(result.totalContributed, currency)} contributed &middot; {formatCurrency(result.totalInterest, currency)} in growth
             </span>
           </div>
-          <GrowthChart data={result.yearlyData} />
+          <GrowthChart
+            data={result.yearlyData}
+            currency={currency}
+            visibleYears={calc.visibleYears}
+            onZoom={calc.zoomVisibleYears}
+          />
         </>
       ) : (
         <p className="sunset-placeholder">Adjust the sliders to a valid range to see your projection.</p>

@@ -1,14 +1,11 @@
 import GrowthChart from '../components/GrowthChart'
 import { INVESTMENT_HORIZON_YEARS } from '../calculations'
+import { CURRENCIES } from '../currency'
 import { formatCurrency } from '../format'
-import type { InvestmentCalculator } from '../hooks/useInvestmentCalculator'
+import type { PageProps } from './pageProps'
 import './TerminalPage.css'
 
-interface PageProps {
-  calc: InvestmentCalculator
-}
-
-function TerminalPage({ calc }: PageProps) {
+function TerminalPage({ calc, currency, onCurrencyChange }: PageProps) {
   const {
     initialInvestment,
     monthlyInvestment,
@@ -19,6 +16,8 @@ function TerminalPage({ calc }: PageProps) {
     setMonthlyInvestment,
     setAnnualRatePercent,
   } = calc
+
+  const currencySymbol = CURRENCIES.find((option) => option.code === currency)?.symbol ?? ''
 
   return (
     <div className="page-terminal">
@@ -34,6 +33,24 @@ function TerminalPage({ calc }: PageProps) {
           <p className="terminal-line terminal-comment"># set your investment parameters</p>
 
           <p className="terminal-line">
+            <span className="terminal-prompt">$</span> currency = [
+            {CURRENCIES.map((option, index) => (
+              <span key={option.code}>
+                {index > 0 && <span className="terminal-token-separator">|</span>}
+                <button
+                  type="button"
+                  className={`terminal-token${option.code === currency ? ' active' : ''}`}
+                  aria-pressed={option.code === currency}
+                  onClick={() => onCurrencyChange(option.code)}
+                >
+                  {option.code}
+                </button>
+              </span>
+            ))}
+            ]
+          </p>
+
+          <p className="terminal-line">
             <span className="terminal-prompt">$</span> initial_investment =
             <input
               type="number"
@@ -41,7 +58,7 @@ function TerminalPage({ calc }: PageProps) {
               onChange={(e) => setInitialInvestment(e.target.value)}
               aria-invalid={Boolean(errors.initialInvestment)}
             />
-            €
+            {currencySymbol}
           </p>
           {errors.initialInvestment && <p className="terminal-line terminal-error">! {errors.initialInvestment}</p>}
 
@@ -53,7 +70,7 @@ function TerminalPage({ calc }: PageProps) {
               onChange={(e) => setMonthlyInvestment(e.target.value)}
               aria-invalid={Boolean(errors.monthlyInvestment)}
             />
-            €
+            {currencySymbol}
           </p>
           {errors.monthlyInvestment && <p className="terminal-line terminal-error">! {errors.monthlyInvestment}</p>}
 
@@ -71,10 +88,10 @@ function TerminalPage({ calc }: PageProps) {
 
           {result ? (
             <>
-              <p className="terminal-line terminal-comment"># running {INVESTMENT_HORIZON_YEARS}-year projection...</p>
-              <p className="terminal-line">&gt; final_balance&nbsp;&nbsp;&nbsp;&nbsp;{formatCurrency(result.finalBalance)}</p>
-              <p className="terminal-line">&gt; total_contributed&nbsp;&nbsp;{formatCurrency(result.totalContributed)}</p>
-              <p className="terminal-line">&gt; total_interest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{formatCurrency(result.totalInterest)}</p>
+              <p className="terminal-line terminal-comment"># running {calc.visibleYears}-year projection... (scroll on chart to zoom)</p>
+              <p className="terminal-line">&gt; final_balance&nbsp;&nbsp;&nbsp;&nbsp;{formatCurrency(result.finalBalance, currency)}</p>
+              <p className="terminal-line">&gt; total_contributed&nbsp;&nbsp;{formatCurrency(result.totalContributed, currency)}</p>
+              <p className="terminal-line">&gt; total_interest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{formatCurrency(result.totalInterest, currency)}</p>
             </>
           ) : (
             <p className="terminal-line terminal-error"># fix the invalid parameters above to run the projection</p>
@@ -91,7 +108,12 @@ function TerminalPage({ calc }: PageProps) {
             <span className="terminal-title">chart.plot</span>
           </div>
           <div className="terminal-chart-body">
-            <GrowthChart data={result.yearlyData} />
+            <GrowthChart
+              data={result.yearlyData}
+              currency={currency}
+              visibleYears={calc.visibleYears}
+              onZoom={calc.zoomVisibleYears}
+            />
           </div>
         </div>
       )}

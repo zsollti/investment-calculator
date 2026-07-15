@@ -1,16 +1,34 @@
-const currencyFormatter = new Intl.NumberFormat('de-DE', {
-  style: 'currency',
-  currency: 'EUR',
-  maximumFractionDigits: 0,
-})
+import type { CurrencyCode } from './currency'
 
-const compactCurrencyFormatter = new Intl.NumberFormat('de-DE', {
-  style: 'currency',
-  currency: 'EUR',
-  notation: 'compact',
-  maximumFractionDigits: 1,
-})
+const LOCALE_BY_CURRENCY: Record<CurrencyCode, string> = {
+  eur: 'de-DE',
+  usd: 'en-US',
+  huf: 'hu-HU',
+}
 
-export function formatCurrency(value: number, compact = false): string {
-  return compact ? compactCurrencyFormatter.format(value) : currencyFormatter.format(value)
+const ISO_BY_CURRENCY: Record<CurrencyCode, string> = {
+  eur: 'EUR',
+  usd: 'USD',
+  huf: 'HUF',
+}
+
+const formatterCache = new Map<string, Intl.NumberFormat>()
+
+function getFormatter(currency: CurrencyCode, compact: boolean): Intl.NumberFormat {
+  const key = `${currency}-${compact}`
+  const cached = formatterCache.get(key)
+  if (cached) return cached
+
+  const formatter = new Intl.NumberFormat(LOCALE_BY_CURRENCY[currency], {
+    style: 'currency',
+    currency: ISO_BY_CURRENCY[currency],
+    notation: compact ? 'compact' : 'standard',
+    maximumFractionDigits: compact ? 1 : 0,
+  })
+  formatterCache.set(key, formatter)
+  return formatter
+}
+
+export function formatCurrency(value: number, currency: CurrencyCode, compact = false): string {
+  return getFormatter(currency, compact).format(value)
 }

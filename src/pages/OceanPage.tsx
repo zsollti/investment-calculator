@@ -1,12 +1,9 @@
 import GrowthChart from '../components/GrowthChart'
 import { INVESTMENT_HORIZON_YEARS } from '../calculations'
+import { CURRENCIES } from '../currency'
 import { formatCurrency } from '../format'
-import type { InvestmentCalculator } from '../hooks/useInvestmentCalculator'
+import type { PageProps } from './pageProps'
 import './OceanPage.css'
-
-interface PageProps {
-  calc: InvestmentCalculator
-}
 
 interface InputCardProps {
   label: string
@@ -34,7 +31,7 @@ function InputCard({ label, value, suffix, error, onChange }: InputCardProps) {
   )
 }
 
-function OceanPage({ calc }: PageProps) {
+function OceanPage({ calc, currency, onCurrencyChange }: PageProps) {
   const {
     initialInvestment,
     monthlyInvestment,
@@ -45,6 +42,8 @@ function OceanPage({ calc }: PageProps) {
     setMonthlyInvestment,
     setAnnualRatePercent,
   } = calc
+
+  const currencySymbol = CURRENCIES.find((option) => option.code === currency)?.symbol ?? ''
 
   return (
     <div className="page-ocean">
@@ -57,14 +56,14 @@ function OceanPage({ calc }: PageProps) {
         <InputCard
           label="Initial investment"
           value={initialInvestment}
-          suffix="€"
+          suffix={currencySymbol}
           error={errors.initialInvestment}
           onChange={setInitialInvestment}
         />
         <InputCard
           label="Monthly investment"
           value={monthlyInvestment}
-          suffix="€"
+          suffix={currencySymbol}
           error={errors.monthlyInvestment}
           onChange={setMonthlyInvestment}
         />
@@ -75,27 +74,48 @@ function OceanPage({ calc }: PageProps) {
           error={errors.annualRatePercent}
           onChange={setAnnualRatePercent}
         />
+        <div className="ocean-card ocean-currency-card">
+          <span className="ocean-card-label">Currency</span>
+          <div className="ocean-currency-buttons">
+            {CURRENCIES.map((option) => (
+              <button
+                key={option.code}
+                type="button"
+                className={`ocean-currency-button${option.code === currency ? ' active' : ''}`}
+                aria-pressed={option.code === currency}
+                onClick={() => onCurrencyChange(option.code)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {result ? (
         <>
           <div className="ocean-hero-card">
             <div className="ocean-hero-main">
-              <span className="ocean-hero-label">Final balance</span>
-              <span className="ocean-hero-value">{formatCurrency(result.finalBalance)}</span>
+              <span className="ocean-hero-label">Final balance after {calc.visibleYears} years</span>
+              <span className="ocean-hero-value">{formatCurrency(result.finalBalance, currency)}</span>
             </div>
             <div className="ocean-hero-sub-stats">
               <div>
                 <span className="ocean-hero-sub-label">Contributed</span>
-                <span className="ocean-hero-sub-value">{formatCurrency(result.totalContributed)}</span>
+                <span className="ocean-hero-sub-value">{formatCurrency(result.totalContributed, currency)}</span>
               </div>
               <div>
                 <span className="ocean-hero-sub-label">Interest earned</span>
-                <span className="ocean-hero-sub-value">{formatCurrency(result.totalInterest)}</span>
+                <span className="ocean-hero-sub-value">{formatCurrency(result.totalInterest, currency)}</span>
               </div>
             </div>
           </div>
-          <GrowthChart data={result.yearlyData} />
+          <GrowthChart
+            data={result.yearlyData}
+            currency={currency}
+            visibleYears={calc.visibleYears}
+            onZoom={calc.zoomVisibleYears}
+          />
         </>
       ) : (
         <p className="ocean-placeholder">Fix the highlighted cards above to see your projection.</p>

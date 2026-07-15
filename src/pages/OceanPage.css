@@ -77,6 +77,33 @@
   color: var(--error);
 }
 
+.ocean-currency-card {
+  justify-content: center;
+}
+
+.ocean-currency-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.ocean-currency-button {
+  font: inherit;
+  font-size: 13px;
+  flex: 1;
+  padding: 8px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.ocean-currency-button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--surface);
+}
+
 .ocean-hero-card {
   background: var(--accent-bg);
   border-radius: var(--radius-lg);

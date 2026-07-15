@@ -1,14 +1,11 @@
 import GrowthChart from '../components/GrowthChart'
 import { INVESTMENT_HORIZON_YEARS } from '../calculations'
+import { CURRENCIES } from '../currency'
 import { formatCurrency } from '../format'
-import type { InvestmentCalculator } from '../hooks/useInvestmentCalculator'
+import type { PageProps } from './pageProps'
 import './MonoPage.css'
 
-interface PageProps {
-  calc: InvestmentCalculator
-}
-
-function MonoPage({ calc }: PageProps) {
+function MonoPage({ calc, currency, onCurrencyChange }: PageProps) {
   const {
     initialInvestment,
     monthlyInvestment,
@@ -20,6 +17,8 @@ function MonoPage({ calc }: PageProps) {
     setAnnualRatePercent,
   } = calc
 
+  const currencySymbol = CURRENCIES.find((option) => option.code === currency)?.symbol ?? ''
+
   return (
     <div className="page-mono">
       <header className="mono-header">
@@ -30,7 +29,25 @@ function MonoPage({ calc }: PageProps) {
       <table className="mono-table">
         <tbody>
           <tr>
-            <th>Initial investment (€)</th>
+            <th>Currency</th>
+            <td>
+              <div className="mono-currency-buttons">
+                {CURRENCIES.map((option) => (
+                  <button
+                    key={option.code}
+                    type="button"
+                    className={`mono-currency-button${option.code === currency ? ' active' : ''}`}
+                    aria-pressed={option.code === currency}
+                    onClick={() => onCurrencyChange(option.code)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th>Initial investment ({currencySymbol})</th>
             <td>
               <input
                 type="number"
@@ -42,7 +59,7 @@ function MonoPage({ calc }: PageProps) {
             </td>
           </tr>
           <tr>
-            <th>Monthly investment (€)</th>
+            <th>Monthly investment ({currencySymbol})</th>
             <td>
               <input
                 type="number"
@@ -73,20 +90,25 @@ function MonoPage({ calc }: PageProps) {
           <table className="mono-table mono-results">
             <tbody>
               <tr>
-                <th>Final balance</th>
-                <td>{formatCurrency(result.finalBalance)}</td>
+                <th>Final balance (year {calc.visibleYears})</th>
+                <td>{formatCurrency(result.finalBalance, currency)}</td>
               </tr>
               <tr>
                 <th>Total contributed</th>
-                <td>{formatCurrency(result.totalContributed)}</td>
+                <td>{formatCurrency(result.totalContributed, currency)}</td>
               </tr>
               <tr>
                 <th>Total interest earned</th>
-                <td>{formatCurrency(result.totalInterest)}</td>
+                <td>{formatCurrency(result.totalInterest, currency)}</td>
               </tr>
             </tbody>
           </table>
-          <GrowthChart data={result.yearlyData} />
+          <GrowthChart
+            data={result.yearlyData}
+            currency={currency}
+            visibleYears={calc.visibleYears}
+            onZoom={calc.zoomVisibleYears}
+          />
         </>
       ) : (
         <p className="mono-placeholder">Fix the highlighted fields above to see your projection.</p>

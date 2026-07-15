@@ -1,6 +1,9 @@
 import type { InvestmentParams, InvestmentResult, YearlyDataPoint } from './types'
 
 export const INVESTMENT_HORIZON_YEARS = 30
+export const MIN_VISIBLE_YEARS = 5
+export const MAX_VISIBLE_YEARS = 30
+export const DEFAULT_VISIBLE_YEARS = 10
 const MONTHS_PER_YEAR = 12
 
 export function calculateInvestmentGrowth(params: InvestmentParams): InvestmentResult {

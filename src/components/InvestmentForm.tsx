@@ -5,6 +5,7 @@ interface InvestmentFormProps {
   initialInvestment: string
   monthlyInvestment: string
   annualRatePercent: string
+  currencySymbol: string
   errors: InvestmentFieldErrors
   onInitialInvestmentChange: (value: string) => void
   onMonthlyInvestmentChange: (value: string) => void
@@ -15,6 +16,7 @@ function InvestmentForm({
   initialInvestment,
   monthlyInvestment,
   annualRatePercent,
+  currencySymbol,
   errors,
   onInitialInvestmentChange,
   onMonthlyInvestmentChange,
@@ -23,7 +25,7 @@ function InvestmentForm({
   return (
     <form className="investment-form" onSubmit={(e) => e.preventDefault()}>
       <div className="form-field">
-        <label htmlFor="initial-investment">Initial investment (€)</label>
+        <label htmlFor="initial-investment">Initial investment ({currencySymbol})</label>
         <input
           id="initial-investment"
           type="number"
@@ -37,7 +39,7 @@ function InvestmentForm({
       </div>
 
       <div className="form-field">
-        <label htmlFor="monthly-investment">Monthly investment (€)</label>
+        <label htmlFor="monthly-investment">Monthly investment ({currencySymbol})</label>
         <input
           id="monthly-investment"
           type="number"

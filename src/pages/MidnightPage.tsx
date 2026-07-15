@@ -2,14 +2,11 @@ import InvestmentForm from '../components/InvestmentForm'
 import GrowthChart from '../components/GrowthChart'
 import SummaryStats from '../components/SummaryStats'
 import { INVESTMENT_HORIZON_YEARS } from '../calculations'
-import type { InvestmentCalculator } from '../hooks/useInvestmentCalculator'
+import { CURRENCIES } from '../currency'
+import type { PageProps } from './pageProps'
 import './MidnightPage.css'
 
-interface PageProps {
-  calc: InvestmentCalculator
-}
-
-function MidnightPage({ calc }: PageProps) {
+function MidnightPage({ calc, currency, onCurrencyChange }: PageProps) {
   const {
     initialInvestment,
     monthlyInvestment,
@@ -21,6 +18,8 @@ function MidnightPage({ calc }: PageProps) {
     setAnnualRatePercent,
   } = calc
 
+  const currencySymbol = CURRENCIES.find((option) => option.code === currency)?.symbol ?? ''
+
   return (
     <div className="page-midnight">
       <aside className="midnight-sidebar">
@@ -30,18 +29,39 @@ function MidnightPage({ calc }: PageProps) {
           initialInvestment={initialInvestment}
           monthlyInvestment={monthlyInvestment}
           annualRatePercent={annualRatePercent}
+          currencySymbol={currencySymbol}
           errors={errors}
           onInitialInvestmentChange={setInitialInvestment}
           onMonthlyInvestmentChange={setMonthlyInvestment}
           onAnnualRateChange={setAnnualRatePercent}
         />
+
+        <div className="midnight-currency-panel">
+          <span className="midnight-currency-title">Currency</span>
+          {CURRENCIES.map((option) => (
+            <button
+              key={option.code}
+              type="button"
+              className={`midnight-currency-option${option.code === currency ? ' active' : ''}`}
+              aria-pressed={option.code === currency}
+              onClick={() => onCurrencyChange(option.code)}
+            >
+              {option.symbol} {option.label}
+            </button>
+          ))}
+        </div>
       </aside>
 
       <main className="midnight-main">
         {result ? (
           <>
-            <SummaryStats result={result} />
-            <GrowthChart data={result.yearlyData} />
+            <SummaryStats result={result} currency={currency} years={calc.visibleYears} />
+            <GrowthChart
+              data={result.yearlyData}
+              currency={currency}
+              visibleYears={calc.visibleYears}
+              onZoom={calc.zoomVisibleYears}
+            />
           </>
         ) : (
           <p className="midnight-placeholder">Fix the highlighted fields in the sidebar to see your projection.</p>

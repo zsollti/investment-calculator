@@ -82,6 +82,26 @@
   border-bottom-color: var(--error);
 }
 
+.terminal-token-separator {
+  color: var(--border);
+  margin: 0 2px;
+}
+
+.terminal-token {
+  font: inherit;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0;
+}
+
+.terminal-token.active {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
 .terminal-chart-body {
   padding: 16px;
 }
